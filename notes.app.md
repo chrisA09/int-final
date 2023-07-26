@@ -215,7 +215,7 @@ npm i --save cors
 
 para que no tire problemas se le debe debe especificar un argumento. se puede usar (*) o ser mas especifico pasando un objeto?--> verificar con la pagina de cors en npm
 
->nota: cuando se pasa a produccion en el origen de cors va el dominio donde esta alojado el front-end. Cosa de que nuestra pagina sea la unica que pueda hacerle request a la api.
+>nota: cuando se pasa a produccion en el origen de cors, va el dominio donde esta alojado el front-end. Cosa de que nuestra pagina sea la unica que pueda hacerle request a la api.
 
 ### Headers
 
@@ -268,9 +268,10 @@ function handleCreateDeck (e) {
 }
   ```
 
-<style>
-    .center {
-        text-align: center;
-        margin: 1em;
-    }
-</style>
+## Fetch y presentacion de notas craeadas
+
+- crear un endpoint que permita a la UI hacer un fetch de todas las notas existentes
+
+> convention use with REST, get data --> fetch request, push data --> post request
+
+*express va a tartar de manera distinta a dos URLs iguales pero con distintos metodos
