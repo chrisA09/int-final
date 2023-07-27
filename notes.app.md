@@ -26,6 +26,8 @@ Make it fast.
 - promises(async await)
 - es6 modules
 - classes
+- dependencie array
+- useEffect
 
 ## Resumen
 
@@ -261,17 +263,68 @@ function handleCreateDeck (e) {
             title,  // el cuerpo del post request va a ser title pasado a cadena de texto json
         }),
         headers: {
-            "Content-Type": "aplication/json"
+            "Content-Type": "application/json"
         }
     })
     setTitle(''); // cuando termina de cumplir con la request, refresca el estado de input
 }
   ```
 
-## Fetch y presentacion de notas craeadas
+## Fetch all notes and send back to the user
 
 - crear un endpoint que permita a la UI hacer un fetch de todas las notas existentes
 
 > convention use with REST, get data --> fetch request, push data --> post request
 
 *express va a tartar de manera distinta a dos URLs iguales pero con distintos metodos
+
+### how to fetch notes from mongo
+
+Trae todas las notas que estan guardadas en la coleccion decks con el metodo *.find()*, y lo loguea en consola
+
+```js
+app.get('/', (req, res) => {
+ const decks = await Deck.find();
+ console.log(decks);
+});
+```
+
+#### *.find()* que es?
+
+Este *.find()* es un metodo que pertenece a [mongo-retrieve data](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/read-operations/retrieve/#:~:text=You%20can%20use%20read%20operations,()%20or%20findOne()%20methods.). Es parte de lo que se llama *"read operation"*.
+
+>'You can use read operations to retrieve data from your MongoDB database. There are multiple types of read operations that access the data in different ways. If you want to request results based on a set of criteria from the existing set of data, you can use a find operation such as the find() or findOne() methods'
+
+Con este metodo puedo hacer que traiga solo las notas que estan relacionadas a un *user id*.
+
+---
+
+Si bien loguea en consola la data, si pruebo con un cliente consumir esa data, *por ej*. "thunder client" va a fallar ya que no puede interpretar la respuesta.
+Para poder interpretar la respuesta y mandar data utilizable a la *UI*, hay que convertir la respuesta a *JSON*.
+
+```js
+app.get('/', (req, res) => {
+ const decks = await Deck.find();
+ res.json(decks);
+});
+```
+
+Ahora si veo la respuesta en el cliente, se va a consumir sin ningun problema y se va a ver el cuerpo de la respuesta en formato json.
+
+### how to fetch this data from the front-end
+
+Se logra usando *useEffect()* en el front-end. Que basicamente hace que cuando carga *app (component)* haga un fetch de todo las notas que haya en dicha coleccion.
+
+> investigar el uso de cleanup function en *useEffect()*, parece que se usa para que no se produzca el fecthing si *app component* no estan en display/uso.
+
+#### Demo de *useEffect()* con *cleanup func*
+
+```js
+useEffect(() => {
+  console.log("we are here");
+
+  return () => {
+    console.log("cleanup");
+  };
+  }, []);
+```
