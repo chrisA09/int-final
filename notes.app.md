@@ -282,9 +282,10 @@ function handleCreateDeck (e) {
 ### how to fetch notes from mongo
 
 Trae todas las notas que estan guardadas en la coleccion decks con el metodo *.find()*, y lo loguea en consola
+Cuandio quiero acceder a la coleccion de mongoDB, hay que hacerlo de la misma manera que lo hace model, mas alla de que la coleccion se llama notes, accedo como *Note.find()*
 
 ```js
-app.get('/', (req, res) => {
+app.get('/decks', (req, res) => {
  const decks = await Deck.find();
  console.log(decks);
 });
@@ -304,7 +305,7 @@ Si bien loguea en consola la data, si pruebo con un cliente consumir esa data, *
 Para poder interpretar la respuesta y mandar data utilizable a la *UI*, hay que convertir la respuesta a *JSON*.
 
 ```js
-app.get('/', (req, res) => {
+app.get('/decks', (req, res) => {
  const decks = await Deck.find();
  res.json(decks);
 });
@@ -329,6 +330,7 @@ useEffect(() => {
   };
   }, []);
 ```
+
 > si se usa un *dependency array vacio* solo va a fucionar cuando se monta el componente y cuando se desmonta. Como react esta en *strict mode*, este proceso va a generar dos request, pero eso es solo meintras se esta en desarrollo cuando la app se encuentra en produccion esto ya no pasa. Esta funcion pertenece a React 18.
 
 ##### no se puede usar *async await* dentro de *useEffect()*
@@ -344,6 +346,7 @@ useEffect(() => {
   fetchDecks();
   }, []);
 ```
+
 o hacer una "self executing anonymous function"
 *ej.*:
 
@@ -354,6 +357,7 @@ useEffect( () => {
   }();
 }, [] )
 ```
+
 #### Store fetched data
 
 Cuando consumo todas las notas en el 'front' van a venir en forma de un array de objetos, este array de objetos lo tengo que almacenar en la ui para poder hacer display de esa data.
@@ -361,9 +365,9 @@ Cuando consumo todas las notas en el 'front' van a venir en forma de un array de
 Esta data se va almacenar en un estado, usando hooks. *useSate()*
 
 *ej.*:
+
 ```jsx
 const [decks, setDecks] = useState([]);
-
 useEffect( () => {
   async function fetchDecks() => {
     const response = await fetch('http://localhost:3000/notes');
@@ -373,6 +377,7 @@ useEffect( () => {
   fetchDecks();
 }, [] )
 ```
+
 ##### displaying stored data
 
 La forma de hacerlo es un usando *.map()*, haciendo un mapeo del array de objetos que esta almacenado en *newDecks*. Tener en cuenta el uso de *keys* cuando quiero mostrar el contenido mapeado. [keys-react docs](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
@@ -380,8 +385,9 @@ La forma de hacerlo es un usando *.map()*, haciendo un mapeo del array de objeto
 > 'JSX elements directly inside a map() call always need keys!'
 
 ```jsx
-<li key={person.id}>...</li>
+<li key={person._id}>...</li> //_id pertenece al id de mongoDB
 ```
+
 ## Delete notes
 
 ### api
@@ -401,6 +407,7 @@ const noteId = req.params.noteId
 ```
 
 - Borro ese id en mongo
+
 > mongo tiene un metodo para borrar una entrada de la coleccion por ID.
 
 ```js
@@ -412,6 +419,7 @@ const note = Note.findByIdAndDelete(noteId);
 ```js
 res.json(note);
 ```
+
 ### UI
 
 Para hacer que la nota se elminine en la ui hay que pasarle una funcion que se ejecute con el evento *onClick* en un boton de 'X' eliminar.

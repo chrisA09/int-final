@@ -16,8 +16,9 @@ app.use(express.json());
 
 /*==================	API endpoints	================*/
 
-app.get('/', (req, res) => {
-	res.send('Hello World!');
+app.get('/notes', async (req, res) => {
+	const notes = await Note.find(); //accedo a la coleccion de la mmisma manera que model(por mas que la coleccion se llame notes)
+	res.json(notes);
 });
 
 app.post('/notes', async (req, res) => {
