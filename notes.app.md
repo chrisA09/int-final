@@ -28,6 +28,7 @@ Make it fast.
 - classes
 - dependencie array
 - useEffect
+- typeScript(avisa cualquier error, excelente para beginners)
 
 ## Resumen
 
@@ -289,7 +290,7 @@ app.get('/', (req, res) => {
 });
 ```
 
-#### *.find()* que es?
+##### *.find()* que es?
 
 Este *.find()* es un metodo que pertenece a [mongo-retrieve data](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/read-operations/retrieve/#:~:text=You%20can%20use%20read%20operations,()%20or%20findOne()%20methods.). Es parte de lo que se llama *"read operation"*.
 
@@ -317,7 +318,7 @@ Se logra usando *useEffect()* en el front-end. Que basicamente hace que cuando c
 
 > investigar el uso de cleanup function en *useEffect()*, parece que se usa para que no se produzca el fecthing si *app component* no estan en display/uso.
 
-#### Demo de *useEffect()* con *cleanup func*
+##### Demo de *useEffect()* con *cleanup func*
 
 ```js
 useEffect(() => {
@@ -327,4 +328,98 @@ useEffect(() => {
     console.log("cleanup");
   };
   }, []);
+```
+> si se usa un *dependency array vacio* solo va a fucionar cuando se monta el componente y cuando se desmonta. Como react esta en *strict mode*, este proceso va a generar dos request, pero eso es solo meintras se esta en desarrollo cuando la app se encuentra en produccion esto ya no pasa. Esta funcion pertenece a React 18.
+
+##### no se puede usar *async await* dentro de *useEffect()*
+
+La solucion a esto es hacer una funcion dentro de *useEffect()* y usar *async await* en esa funcion
+*ej.*:
+
+```jsx
+useEffect(() => {
+  async function fetchDecks () {
+    await fetch('http://localhost:3000/notes');
+  }
+  fetchDecks();
+  }, []);
+```
+o hacer una "self executing anonymous function"
+*ej.*:
+
+```jsx
+useEffect( () => {
+  async () => {
+    await fetch('http://localhost:3000/notes');
+  }();
+}, [] )
+```
+#### Store fetched data
+
+Cuando consumo todas las notas en el 'front' van a venir en forma de un array de objetos, este array de objetos lo tengo que almacenar en la ui para poder hacer display de esa data.
+
+Esta data se va almacenar en un estado, usando hooks. *useSate()*
+
+*ej.*:
+```jsx
+const [decks, setDecks] = useState([]);
+
+useEffect( () => {
+  async function fetchDecks() => {
+    const response = await fetch('http://localhost:3000/notes');
+    const newDeacks = await response.json();
+    setDecks(newDecks);
+  }
+  fetchDecks();
+}, [] )
+```
+##### displaying stored data
+
+La forma de hacerlo es un usando *.map()*, haciendo un mapeo del array de objetos que esta almacenado en *newDecks*. Tener en cuenta el uso de *keys* cuando quiero mostrar el contenido mapeado. [keys-react docs](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
+
+> 'JSX elements directly inside a map() call always need keys!'
+
+```jsx
+<li key={person.id}>...</li>
+```
+## Delete notes
+
+### api
+
+Para el endpoint que va a eliminar notas hace falta agregar el *id* de la nota a eliminar.
+
+URL delete endpoint
+
+```js
+app.delete("/notes/:noteId")
+```
+
+- se guarda el id de la nota en una variable.
+
+```js
+const noteId = req.params.noteId
+```
+
+- Borro ese id en mongo
+> mongo tiene un metodo para borrar una entrada de la coleccion por ID.
+
+```js
+const note = Note.findByIdAndDelete(noteId);
+```
+
+- devuelvo la nota borrada como json a modo de prueba
+
+```js
+res.json(note);
+```
+### UI
+
+Para hacer que la nota se elminine en la ui hay que pasarle una funcion que se ejecute con el evento *onClick* en un boton de 'X' eliminar.
+
+> optimistic updates: 
+
+La funcion va a ser un fetch de con metodo *DELETE* y la URL va a tener un variable que va a corresponder al id de la nota que quiero borrar
+
+```jsx
+
 ```
