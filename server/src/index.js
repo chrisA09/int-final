@@ -35,6 +35,11 @@ app.post('/notes', async (req, res) => {
 	res.json(createdNote);
 });
 
+app.delete('/notes/:noteId', async (req, res) => {
+	const noteId = req.params.noteId;
+	const note = await Note.findByIdAndDelete(noteId);
+	res.json(note);
+});
 /*==================	API endpoints	================*/
 
 //coneccion con DB

@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { Link } from "react-router-dom";
+import deleteNote from './API/deleteNote';
+import getNotes from './API/getNotes';
+import createNote from './API/createNote';
 import './App.css'
 
 function App() {
@@ -10,8 +14,7 @@ function App() {
 
   useEffect( ()=> {
     async function fetchNotes() {
-      const response = await fetch('http://localhost:3000/notes')
-      const newNotes = await response.json();
+      const newNotes = await getNotes()
       setNotes(newNotes)
     }
     fetchNotes()
@@ -19,18 +22,15 @@ function App() {
 
   async function handleCreateNote (e){
     e.preventDefault();
-    await fetch('http://localhost:3000/notes',{
-      method:'POST',
-      body: JSON.stringify({
-        title,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return setTitle('');
+    const note = await createNote(title);
+    setNotes([...notes, note]);
+    setTitle('');
   }
-  
+  async function handleDeleteNote (noteId){
+      deleteNote(noteId)
+      setNotes(notes.filter((note)=> note._id !== noteId));
+  }
+
   return (
     <div className='app'>
       <form onSubmit={handleCreateNote}>
@@ -45,11 +45,12 @@ function App() {
       />
       <button>set title</button>
     </form>
+    {/* note tiene que ser un componente con estilos propios y pasarle props */}
       <div className="notes">
         {notes.map((note) => 
         <div key={note._id}> 
-        {note.title} 
-        <FontAwesomeIcon icon={faTrash} />
+        <Link to={`notes/${note._id}`}>{note.title}</Link>
+        <button onClick={()=>handleDeleteNote(note._id)}><FontAwesomeIcon icon={faTrash} /></button>
         </div>)} 
       </div>
           

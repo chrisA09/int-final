@@ -390,7 +390,7 @@ La forma de hacerlo es un usando *.map()*, haciendo un mapeo del array de objeto
 
 ## Delete notes
 
-### api
+### API
 
 Para el endpoint que va a eliminar notas hace falta agregar el *id* de la nota a eliminar.
 
@@ -424,10 +424,88 @@ res.json(note);
 
 Para hacer que la nota se elminine en la ui hay que pasarle una funcion que se ejecute con el evento *onClick* en un boton de 'X' eliminar.
 
-> optimistic updates: 
-
 La funcion va a ser un fetch de con metodo *DELETE* y la URL va a tener un variable que va a corresponder al id de la nota que quiero borrar
 
-```jsx
+El *ID* de la nota a borrar tiene que ser dinamico, se tiene que tener en cuanta en todas las url que manejen id.
 
+```jsx
+async function handleDeleteNote (noteId){
+    await fetch(`http://localhost:3000/notes/${noteId}`,{
+      method:'DELETE',
+      });
+  }
+  // y en la vista...
+  onClick={()=>handleDeleteNote(note._id)} // 
+```
+
+#### Mostrar cambios de UI cuando se elimina una nota
+
+La UI tiene que reaccionar a los cambios producidos a raiz de la eliminacion de una nota. Para esto existe una forma de hacerlo que se llama *optimistic updates*
+
+> optimistic updates: 'In an optimistic update the UI behaves as though a change was successfully completed before receiving confirmation from the server that it actually was - it is being optimistic that it will eventually get the confirmation rather than an error. This allows for a more responsive user experience.'
+
+[optimistic updates](https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171)
+
+```jsx
+async function handleDeleteNote (noteId){
+    await fetch(`http://localhost:3000/notes/${noteId}`,{
+      method:'DELETE',
+      });
+      setNotes(notes.filter(note=> note._id !== noteId );
+  }
+```
+
+#### Mostrar cambios de UI cuando se agrega una nota
+
+Mismo problema que con la eliminacion de las notas. El problema esta en tener que hacer un fetch luego de cada cambio que realizo y esto hace mas lenta la ux. por eso tengo hacer cambio en la ui teniendo en cuenta/"siendo optimistic" de que va a cambiar en la DB.
+
+Se crea un nuevo array de setNotes, usando *spread operator* agrego todo lo que se encontraba en el array, y agrego la nueva entrada.
+
+Lo que pasa de fondo con esto es que cada vez que se agrega una nueva nota, automaticamente, se guarda la respuesta del fetch, con motodo post de *handleCreateNote*, al array de estado. En resumen muestra la nueva entrada en la db en la *ui* como un nuevo deck. En vez de tener que hacer un fetch deck para mostrar todas las notas. *adelantarse a lo que va a pasar*
+Mismo concepto utilizado para borrar instantaneamente las notas.
+
+```jsx
+ async function handleCreateNote (e){
+    e.preventDefault();
+    const response = await fetch('http://localhost:3000/notes',{
+      method:'POST',
+      body: JSON.stringify({
+        title,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const note = await response.json()
+    setNotes([...notes, note])
+    setTitle('');
+  }
+```
+
+## React router
+
+Primer paso es instalar react router dom
+
+```bash
+npm i react-router-dom
+```
+
+Para usar router:
+
+```jsx
+// main.jsx
+import ReactDOM from 'react-dom/client'
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <RouterProvider router={router} /> 
+  </React.StrictMode>,
+)
 ```
