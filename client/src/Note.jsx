@@ -2,6 +2,6 @@
 
 export default function Note() {
   return (
-    <div></div>
+    <div>funciona uno dos</div>
   )
 }
