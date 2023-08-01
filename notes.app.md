@@ -525,3 +525,27 @@ Se lo consume como variable en la URL de cada fetch.
 ```jsx
 export const API_URL = "http://localhost:3000"
 ```
+
+### API
+
+Mismo que con la UI, para que no aumente la complejidad con la cantidad de codigo.
+Se quita la logica de cada endpoint y se lo pone en otro archivo que se va a llamar controlador.Se lo importa y exporta usando ES& modules.
+
+*ej.*:
+
+```js
+//api
+app.get("/notes", getNotesController)
+```
+
+```js
+//controller
+import Note from '..models/Note.js';
+
+export async function getNotesController(req, res) {
+ const notes = await Note.find(); //accedo a la coleccion de la mmisma manera que model(por mas que la coleccion se llame notes)
+ res.json(notes);
+}
+```
+
+en el ejemplo de arriba se importa Note.js del model de mongoose.
