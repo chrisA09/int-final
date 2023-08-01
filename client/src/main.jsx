@@ -14,10 +14,6 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "/notes",
-    element: <App />,
-  },
-  {
     path: "/notes/:noteId",
     element: <Note />,
   },

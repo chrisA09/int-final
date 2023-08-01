@@ -46,7 +46,7 @@ app.delete('/notes/:noteId', async (req, res) => {
 app.post('notes/:noteId/cards', async (req, res) => {
 	const noteId = req.params.noteId;
 	const note = await Note.findById(noteId);
-	if (!deck) return res.status(400).send('no note of this id exists');
+	if (!note) return res.status(400).send('no note of this id exists');
 	const cardContent = req.body; //el contenido de cada tarjeta se va a encontrar en el cuerpo de la DB.
 	note.cards.push(cardContent);
 	await note.save();

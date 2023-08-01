@@ -1,7 +1,8 @@
+import { API_URL } from "./config";
 
 
 export default async function deleteNote(noteId) {
-    await fetch(`http://localhost:3000/notes/${noteId}`,{
+    await fetch(`${API_URL}/notes/${noteId}`,{
         method:'DELETE',
         });
 }

@@ -451,7 +451,7 @@ async function handleDeleteNote (noteId){
     await fetch(`http://localhost:3000/notes/${noteId}`,{
       method:'DELETE',
       });
-      setNotes(notes.filter(note=> note._id !== noteId );
+      setNotes(notes.filter(note=> note._id !== noteId ));
   }
 ```
 
@@ -508,4 +508,20 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <RouterProvider router={router} /> 
   </React.StrictMode>,
 )
+```
+
+## Refactorizacinon de codigo
+
+### UI
+
+Hasta ahora todos los metodos y los fetch se encuentran todos en mismo componente, el objetivo es que cada metodo tenga su componente *por ej.* : "getNotes", "createNote", "deleteNote". El objetivo es abtraer la logica de funcionanmiento y solamente tener que importar la funcion necesaria en cada caso y pasarle, los props que correspondan.
+
+#### config file
+
+Como cada metodo tiene una URL hardcodeada, es mejor que ahi vaya una variable en caso de tener que cambiar el puerto del back end.
+En la carpeta API, se crea un archivo de config y se lo exporta como API_URL.
+Se lo consume como variable en la URL de cada fetch.
+
+```jsx
+export const API_URL = "http://localhost:3000"
 ```
