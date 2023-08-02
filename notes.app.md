@@ -29,6 +29,7 @@ Make it fast.
 - dependencie array
 - useEffect
 - typeScript(avisa cualquier error, excelente para beginners)
+- react Router
 
 ## Resumen
 
@@ -510,7 +511,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 ```
 
-## Refactorizacinon de codigo
+## Refactorizacion de codigo
 
 ### UI
 
@@ -549,3 +550,54 @@ export async function getNotesController(req, res) {
 ```
 
 en el ejemplo de arriba se importa Note.js del model de mongoose.
+
+Ese mismo concepto se aplica a cada endpoint
+
+> si no le pongo la extencion al import del model me tira error nodemon. Probablemente se solucione desde la declaracion de package.json.
+
+## Create cards
+
+### BACK-END/API
+
+Dentro de cada nota va a existir la opcion de crear tarjetas, *cards*. Estas son los apuntes que corresponden a la nota principal.
+
+Este es el controlador para el endpoint, 'notes/:nodeId/cards'. La url se encuentra anidada ya que *cards* va a estar alojado dentro de cada nota.
+
+```js
+//controller
+import Note from '../models/Note.js';
+
+export async function createCardDeckController(req, res) {
+ const noteId = req.params.noteId; //necesario para encontrar la nota donde se va a crear card
+ const note = await Note.findById(noteId); // nota sobre la cual se va a insertar card
+ const card = req.body.cardContent; // esta es la data que voy a estar persistiendo en dicha nota.
+ note.cards.push(card); // inserta el contenido de card dentro del array "cards" definido en ./models/note.js
+ await note.save();
+ res.json(note);
+}
+```
+
+```js
+//model
+import mongoose from 'mongoose';
+
+const Schema = mongoose.Schema;
+// const ObjectId = Schema.ObjectId;
+
+const NoteSchema = new Schema({
+ title: String,
+ cards: [String], // array "cards" donde voy a estar empujando el contenido de "card"
+});
+
+const NoteModel = mongoose.model('Note', NoteSchema); //esto me permite acceder al modelo mas info en la doc.
+
+export default NoteModel;
+```
+
+> tener encuenta que para decirle a la DB que voy a estar almacenando un array, el modelo lleva esa notacion [String].
+
+### UI
+
+Como en la api se definio que cards va a estar anidado en las notas, entonces en la ui como *app* maneja toda la logica de "*notes*", el componente *Note* va a manejar toda la logica de "*cards*".
+
+Como el concepto es el mismo la logica de *Note* va a ser muy similar a la de *App*, ya que va a menjar las mismas operaciones *CRUD* para "*cards*".

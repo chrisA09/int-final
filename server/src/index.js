@@ -37,15 +37,3 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 		console.log(`Example app listening on port ${port}`);
 	});
 });
-
-/*
-app.post('notes/:noteId/cards', async (req, res) => {
-	const noteId = req.params.noteId;
-	const note = await Note.findById(noteId);
-	if (!note) return res.status(400).send('no note of this id exists');
-	const cardContent = req.body; //el contenido de cada tarjeta se va a encontrar en el cuerpo de la DB.
-	note.cards.push(cardContent);
-	await note.save();
-	res.json(note);
-});
-*/
