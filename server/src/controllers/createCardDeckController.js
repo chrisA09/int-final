@@ -6,7 +6,7 @@ export async function createCardDeckController(req, res) {
 	// aca deberia atajar un error en caso de que no se encuentre noteId/note
 	const card = req.body.cardContent;
 	note.cards.push(card);
-	console.log(card);
+	// console.log(card);
 	await note.save();
 	res.json(note);
 }

@@ -600,4 +600,41 @@ export default NoteModel;
 
 Como en la api se definio que cards va a estar anidado en las notas, entonces en la ui como *app* maneja toda la logica de "*notes*", el componente *Note* va a manejar toda la logica de "*cards*".
 
-Como el concepto es el mismo la logica de *Note* va a ser muy similar a la de *App*, ya que va a menjar las mismas operaciones *CRUD* para "*cards*".
+El concepto es el mismo la logica de *Note* va a ser muy similar a la de *App*, ya que va a menjar las mismas operaciones *CRUD* para "*cards*".
+
+La particularidad en este caso esta en *`Note`*, que va a usar el id de la URL gracias al hook *useParams* de react router, y se la va a pasar a `createCard()` como argumento.
+
+> The `useParams` hook returns an object of key/value pairs of the dynamic params from the current URL that were matched by the `<Route path>`. Child routes inherit all params from their parent routes.
+>
+> The `useParams()` hook allows you to access the parameters from the current URL. For example, if your URL looks like "/users/:userId", where ":userId" is a parameter, the `useParams()` hook will allow you to extract the value of `userId` from the URL.
+
+```jsx
+// Note
+const [cardContent, setCardContent] = useState('')
+  let { noteId } = useParams();
+
+  async function handleCreateCard (e){
+    e.preventDefault();
+    const card = await createCard(noteId,cardContent);
+    setCardContent('');
+  }
+```
+
+```jsx
+// createCard
+import { API_URL } from "./config";
+
+export default async function createCard( noteId,cardContent ) {
+    const response = await fetch(`${API_URL}/notes/${noteId}/cards`,{
+        method:'POST',
+        body: JSON.stringify({
+          cardContent,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.json()
+}
+
+```

@@ -1,5 +1,6 @@
 // import { useEffect, useState } from 'react'
 import {  useState } from 'react'
+import {  useParams } from 'react-router-dom';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrash } from '@fortawesome/free-solid-svg-icons'
 // import { Link } from "react-router-dom";
@@ -11,8 +12,9 @@ import createCard from './API/createCard';
 
 function Note() {
 
-  // const [notes, setNotes] = useState([])
+  const [noteCards, setNoteCards] = useState([])
   const [cardContent, setCardContent] = useState('')
+  let { noteId } = useParams();
 
   // useEffect( ()=> {
   //   async function fetchNotes() {
@@ -24,11 +26,15 @@ function Note() {
 
   async function handleCreateCard (e){
     e.preventDefault();
-    const card = await createCard(cardContent);
-    console.log(card)
-    // setNotes([...notes, note]);
-    // setCardContent('');
+    const {cards} = await createCard(noteId,cardContent);
+
+
+    setNoteCards(cards); 
+    setCardContent('');
   }
+  // console.log(noteCards)
+  // noteCards.map((card,i)=>{console.log(card[i])})
+
   // async function handleDeleteNote (noteId){
   //     deleteNote(noteId)
   //     setNotes(notes.filter((note)=> note._id !== noteId));
@@ -40,7 +46,7 @@ function Note() {
       <label htmlFor="create-card">Create Card</label>
       <input  
         id='create-card'
-        value={cardContent}// input que tiene como value al estado "title". que este mismo tiene como valor incial un string vacio('').
+        value={cardContent}
         onChange={(e)=>{
           setCardContent(e.target.value)
         }}
@@ -49,14 +55,14 @@ function Note() {
       <button>set cardContent</button>
     </form>
     {/* note tiene que ser un componente con estilos propios y pasarle props */}
-      {/* <div className="cards">
-        {cards.map((card) => 
-        <div key={note._id}> 
-        <li> {card.cardContent} </li>
-        <Link to={`notes/${note._id}`}>{note.title}</Link>
-        <button onClick={()=>handleDeleteNote(note._id)}><FontAwesomeIcon icon={faTrash} /></button>
+      <div className="notes">
+        {noteCards.map((card,i) => 
+        <div key={i}> 
+        <li> {card} </li>
+        {/* <Link to={`notes/${note._id}`}>{note.title}</Link>
+        <button onClick={()=>handleDeleteNote(note._id)}><FontAwesomeIcon icon={faTrash} /></button> */}
         </div>)} 
-      </div> */}
+      </div>
           
     </div>
   )
