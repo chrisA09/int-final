@@ -27,14 +27,10 @@ function Note() {
   async function handleCreateCard (e){
     e.preventDefault();
     const {cards} = await createCard(noteId,cardContent);
-
-
     setNoteCards(cards); 
     setCardContent('');
   }
-  // console.log(noteCards)
-  // noteCards.map((card,i)=>{console.log(card[i])})
-
+  
   // async function handleDeleteNote (noteId){
   //     deleteNote(noteId)
   //     setNotes(notes.filter((note)=> note._id !== noteId));
