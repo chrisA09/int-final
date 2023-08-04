@@ -1,6 +1,6 @@
 import Note from '../models/Note.js';
 
-export async function createCardDeckController(req, res) {
+export async function createNoteCardController(req, res) {
 	const noteId = req.params.noteId;
 	const note = await Note.findById(noteId);
 	// aca deberia atajar un error en caso de que no se encuentre noteId/note

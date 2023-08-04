@@ -8,7 +8,7 @@ import {  useParams } from 'react-router-dom';
 // import getNotes from './API/getNotes';
 // import createNote from './API/createNote';
 import createCard from './API/createCard';
-// import './App.css'
+import './App.css'
 
 function Note() {
 
@@ -54,9 +54,8 @@ function Note() {
       <div className="notes">
         {noteCards.map((card,i) => 
         <div key={i}> 
-        <li> {card} </li>
-        {/* <Link to={`notes/${note._id}`}>{note.title}</Link>
-        <button onClick={()=>handleDeleteNote(note._id)}><FontAwesomeIcon icon={faTrash} /></button> */}
+        {card}
+        {/*<button onClick={()=>handleDeleteNote(note._id)}><FontAwesomeIcon icon={faTrash} /></button> */}
         </div>)} 
       </div>
           

@@ -9,7 +9,8 @@ import cors from 'cors';
 import { getNotesController } from './controllers/getNotesController.js';
 import { createNoteController } from './controllers/createNoteController.js';
 import { deleteNoteController } from './controllers/deleteNoteController.js';
-import { createCardDeckController } from './controllers/createCardDeckController.js';
+import { createNoteCardController } from './controllers/createNoteCardController.js';
+import { getNoteCardsController } from './controllers/getNoteCardsController.js';
 
 const app = express();
 const port = 3000;
@@ -27,7 +28,8 @@ app.delete('/notes/:noteId', deleteNoteController);
 
 /*==================	cards endpoints	================*/
 
-app.post('/notes/:noteId/cards', createCardDeckController);
+app.get('/notes/:noteId/', getNoteCardsController);
+app.post('/notes/:noteId/cards', createNoteCardController);
 
 /*==================	API endpoints	================*/
 
