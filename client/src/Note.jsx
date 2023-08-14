@@ -1,5 +1,5 @@
-// import { useEffect, useState } from 'react'
-import {  useState } from 'react'
+import { useEffect, useState } from 'react'
+// import {  useState } from 'react'
 import {  useParams } from 'react-router-dom';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -8,6 +8,7 @@ import {  useParams } from 'react-router-dom';
 // import getNotes from './API/getNotes';
 // import createNote from './API/createNote';
 import createCard from './API/createCard';
+import getCards from './API/getCards'
 import './App.css'
 
 function Note() {
@@ -16,13 +17,13 @@ function Note() {
   const [cardContent, setCardContent] = useState('')
   let { noteId } = useParams();
 
-  // useEffect( ()=> {
-  //   async function fetchNotes() {
-  //     const newNotes = await getNotes()
-  //     setNotes(newNotes)
-  //   }
-  //   fetchNotes()
-  // } , [])
+ useEffect( ()=> {
+   async function fetchNotes() {
+     const newCard = await getCards(noteId)
+     setNoteCards(newCard.cards) // corregir porque cards y note deben ir mezcladas.
+   }
+   fetchNotes()
+ } , [noteId])
 
   async function handleCreateCard (e){
     e.preventDefault();

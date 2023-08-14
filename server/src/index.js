@@ -3,7 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import Note from './models/Note.js';
+// import Note from './models/Note.js';
 
 import cors from 'cors';
 import { getNotesController } from './controllers/getNotesController.js';
@@ -11,6 +11,7 @@ import { createNoteController } from './controllers/createNoteController.js';
 import { deleteNoteController } from './controllers/deleteNoteController.js';
 import { createNoteCardController } from './controllers/createNoteCardController.js';
 import { getNoteCardsController } from './controllers/getNoteCardsController.js';
+// import { deleteNoteCardController } from './controllers/deleteNoteCardController.js';
 
 const app = express();
 const port = 3000;
@@ -30,6 +31,7 @@ app.delete('/notes/:noteId', deleteNoteController);
 
 app.get('/notes/:noteId/', getNoteCardsController);
 app.post('/notes/:noteId/cards', createNoteCardController);
+// app.delete('/notes/:noteId/', deleteNoteCardController);
 
 /*==================	API endpoints	================*/
 
